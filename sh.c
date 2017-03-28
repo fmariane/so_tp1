@@ -8,6 +8,10 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
+/* MARK NAME Seu Nome Aqui */
+/* MARK NAME Nome de Outro Integrante Aqui2 */
+/* MARK NAME E Etc */
+
 /****************************************************************
  * Shell xv6 simplificado
  *
