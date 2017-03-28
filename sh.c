@@ -9,7 +9,7 @@
 #include <sys/wait.h>
 
 /* MARK NAME Seu Nome Aqui */
-/* Aqui o outro integrante tenta nao fazer merda */
+/* Aqui o outro integrante tenta nao fazer merda 2*/
 /* MARK NAME E Etc */
 
 /****************************************************************
