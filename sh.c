@@ -73,17 +73,16 @@ runcmd(struct cmd *cmd)
     ecmd = (struct execcmd*)cmd;
     if(ecmd->argv[0] == 0)
       exit(0);
+
     /* MARK START task2
      * TAREFA2: Implemente codigo abaixo para executar
      * comandos simples. */
-    printf("ARGV[0] = %s\n", ecmd->argv[0]);
-    char *pathtofunc = (char*)calloc(10, sizeof(char)); //somando /bin/ e o tamanho dos comandos 10 eh um espaco suficiente
-    strcpy(pathtofunc, "/bin/");
-    strcat(pathtofunc, ecmd->argv[0]);
-    printf("pathtofunc = %s\n", pathtofunc);
-    execl(pathtofunc, ecmd->argv[0], NULL);
+    execvp(ecmd->argv[0],ecmd->argv);
+
     fprintf(stderr, "exec nao implementado\n");
+
     /* MARK END task2 */
+
     break;
 
   case '>':
