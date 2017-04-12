@@ -91,9 +91,19 @@ runcmd(struct cmd *cmd)
     /* MARK START task3
      * TAREFA3: Implemente codigo abaixo para executar
      * comando com redirecionamento. */
-    fprintf(stderr, "redir nao implementado\n");
+
+    int fd; //Descritor de arquivo
+    if(rcmd->type == '<')
+        fd = open(rcmd->file,rcmd->mode);//Abre arquivo de entrada
+    else{
+        fd = open(rcmd->file,rcmd->mode, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH |
+                  S_IWGRP | S_IWOTH );  /* Abre/cria um arquivo de saida com permissoes
+                                         * de leitura e escrita. */
+    }
+    dup2(fd,rcmd->fd); //Duplica o descritor de arquivo
     /* MARK END task3 */
     runcmd(rcmd->cmd);
+    close(rcmd->fd);    //Fecha arquivo
     break;
 
   case '|':
