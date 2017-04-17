@@ -111,7 +111,24 @@ runcmd(struct cmd *cmd)
     /* MARK START task4
      * TAREFA4: Implemente codigo abaixo para executar
      * comando com pipes. */
-    fprintf(stderr, "pipe nao implementado\n");
+    if (pipe(p) == -1)
+          fprintf(stderr, "Ocorreu um erro.\n");
+
+        switch(fork()) {
+          case 0:     // Processo filho; escreve
+            dup2(p[1], 1);
+            close(p[0]);
+            runcmd(pcmd->left);    // Executa comando
+            close(p[1]);
+
+          default:    // Processo pai; lê
+            dup2(p[0], 0);
+            close(p[1]);
+            int status;
+            wait(&status);
+            runcmd(pcmd->right);   // Executa comando
+            close(p[0]);
+        }
     /* MARK END task4 */
     break;
   }    
