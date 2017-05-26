@@ -73,11 +73,16 @@ runcmd(struct cmd *cmd)
     ecmd = (struct execcmd*)cmd;
     if(ecmd->argv[0] == 0)
       exit(0);
+
     /* MARK START task2
      * TAREFA2: Implemente codigo abaixo para executar
      * comandos simples. */
+    execvp(ecmd->argv[0],ecmd->argv);
+
     fprintf(stderr, "exec nao implementado\n");
+
     /* MARK END task2 */
+
     break;
 
   case '>':
@@ -86,9 +91,19 @@ runcmd(struct cmd *cmd)
     /* MARK START task3
      * TAREFA3: Implemente codigo abaixo para executar
      * comando com redirecionamento. */
-    fprintf(stderr, "redir nao implementado\n");
+
+    int fd; //Descritor de arquivo
+    if(rcmd->type == '<')
+        fd = open(rcmd->file,rcmd->mode);//Abre arquivo de entrada
+    else{
+        fd = open(rcmd->file,rcmd->mode, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH |
+                  S_IWGRP | S_IWOTH );  /* Abre/cria um arquivo de saida com permissoes
+                                         * de leitura e escrita. */
+    }
+    dup2(fd,rcmd->fd); //Duplica o descritor de arquivo
     /* MARK END task3 */
     runcmd(rcmd->cmd);
+    close(rcmd->fd);    //Fecha arquivo
     break;
 
   case '|':
@@ -96,7 +111,24 @@ runcmd(struct cmd *cmd)
     /* MARK START task4
      * TAREFA4: Implemente codigo abaixo para executar
      * comando com pipes. */
-    fprintf(stderr, "pipe nao implementado\n");
+    if (pipe(p) == -1)
+          fprintf(stderr, "Ocorreu um erro.\n");
+
+        switch(fork()) {
+          case 0:     // Processo filho; escreve
+            dup2(p[1], 1);
+            close(p[0]);
+            runcmd(pcmd->left);    // Executa comando
+            close(p[1]);
+
+          default:    // Processo pai; lê
+            dup2(p[0], 0);
+            close(p[1]);
+            int status;
+            wait(&status);
+            runcmd(pcmd->right);   // Executa comando
+            close(p[0]);
+        }
     /* MARK END task4 */
     break;
   }    
